@@ -34,6 +34,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
 
 #if defined( _M_IX86 ) && defined(__WATCOMC__)
 #include <i86.h>
@@ -140,17 +141,6 @@ static size_t getSize( entry_ptr p )
 #ifdef __WATCOMC__
 #pragma warning 579 4;  // reenable pointer truncated warning.
 #endif
-
-static char *stpcpy( char *dest, const char *src )
-{
-    *dest = *src;
-    while( *dest ) {
-        ++dest;
-        ++src;
-        *dest = *src;
-    }
-    return( dest );
-}
 
 static char *formHex( char *ptr, uint_32 data, uint size )
 {
@@ -771,7 +761,7 @@ static void memLine( FILE *fh, const char *buf, unsigned size )
 void tm_Init( void )
 /******************/
 {
-    if ( FileTrmem = fopen( TRMEM_LOGFN, "w" ) ) {
+    if ( ( FileTrmem = fopen( TRMEM_LOGFN, "w" ) ) ) {
         //hTrmem = _trmem_open( malloc, free, realloc, _expand, memFile, memLine,
         hTrmem = _trmem_open( malloc, free, _TRMEM_NO_REALLOC, _TRMEM_NO_REALLOC, FileTrmem, memLine,
                   _TRMEM_ALLOC_SIZE_0 | _TRMEM_FREE_NULL | _TRMEM_OUT_OF_MEMORY | _TRMEM_CLOSE_CHECK_FREE );
