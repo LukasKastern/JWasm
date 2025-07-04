@@ -142,6 +142,19 @@ static size_t getSize( entry_ptr p )
 #pragma warning 579 4;  // reenable pointer truncated warning.
 #endif
 
+#ifndef __UNIX__
+static char *stpcpy( char *dest, const char *src )
+{
+    *dest = *src;
+    while( *dest ) {
+        ++dest;
+        ++src;
+        *dest = *src;
+    }
+    return( dest );
+}
+#endif
+
 static char *formHex( char *ptr, uint_32 data, uint size )
 {
     char            *str;
